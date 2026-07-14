@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using MotoclubeManager.Api.Models;
+using MotoclubeManager.Api.Dtos.Membros;
 
 namespace MotoclubeManager.Api.Controllers;
 
@@ -38,22 +39,24 @@ public class MembrosController : ControllerBase
     private static int ProximoId = 3;
 
     [HttpGet]
-    public ActionResult<List<Membro>> Listar([FromQuery] StatusMembro? status)
+    public ActionResult<List<MembroResponse>> Listar([FromQuery] StatusMembro? status)
     {
-        if (status is null)
+        var membros = Membros.AsEnumerable();
+
+        if (status is not null)
         {
-            return Ok(Membros);
+            membros = membros.Where(membro => membro.Status == status);
         }
 
-        var membrosFiltrados = Membros
-            .Where(membro => membro.Status == status)
+        var response = membros
+            .Select(MapearParaResponse)
             .ToList();
 
-        return Ok(membrosFiltrados);
+        return Ok(response);
     }
-
+    
     [HttpGet("{id}")]
-    public ActionResult<Membro> BuscarPorId(int id)
+    public ActionResult<MembroResponse> BuscarPorId(int id)
     {
         var membro = Membros.FirstOrDefault(membro => membro.Id == id);
 
@@ -62,23 +65,39 @@ public class MembrosController : ControllerBase
             return NotFound();
         }
 
-        return Ok(membro);
+        return Ok(MapearParaResponse(membro));
     }
 
     [HttpPost]
-    public ActionResult<Membro> Cadastrar(Membro novoMembro)
+    public ActionResult<MembroResponse> Cadastrar(CreateMembroRequest request)
     {
-        novoMembro.Id = ProximoId;
-        novoMembro.DataCriacao = DateTime.UtcNow;
+        var novoMembro = new Membro
+        {
+            Id = ProximoId,
+            Nome = request.Nome,
+            Apelido = request.Apelido,
+            Telefone = request.Telefone,
+            Email = request.Email,
+            DataIngresso = request.DataIngresso,
+            DataPromocaoMeioEscudo = request.DataPromocaoMeioEscudo,
+            DataPromocaoEscudo = request.DataPromocaoEscudo,
+            DataSaida = request.DataSaida,
+            Status = request.Status,
+            Cargo = request.Cargo,
+            Observacoes = request.Observacoes,
+            DataCriacao = DateTime.UtcNow
+        };
 
         Membros.Add(novoMembro);
         ProximoId++;
 
-        return CreatedAtAction(nameof(BuscarPorId), new { id = novoMembro.Id }, novoMembro);
+        var response = MapearParaResponse(novoMembro);
+
+        return CreatedAtAction(nameof(BuscarPorId), new { id = novoMembro.Id }, response);
     }
 
     [HttpPut("{id}")]
-    public IActionResult Atualizar(int id, Membro membroAtualizado)
+    public IActionResult Atualizar(int id, UpdateMembroRequest request)
     {
         var membro = Membros.FirstOrDefault(membro => membro.Id == id);
 
@@ -87,17 +106,17 @@ public class MembrosController : ControllerBase
             return NotFound();
         }
 
-        membro.Nome = membroAtualizado.Nome;
-        membro.Apelido = membroAtualizado.Apelido;
-        membro.Telefone = membroAtualizado.Telefone;
-        membro.Email = membroAtualizado.Email;
-        membro.DataIngresso = membroAtualizado.DataIngresso;
-        membro.DataPromocaoMeioEscudo = membroAtualizado.DataPromocaoMeioEscudo;
-        membro.DataPromocaoEscudo = membroAtualizado.DataPromocaoEscudo;
-        membro.DataSaida = membroAtualizado.DataSaida;
-        membro.Status = membroAtualizado.Status;
-        membro.Cargo = membroAtualizado.Cargo;
-        membro.Observacoes = membroAtualizado.Observacoes;
+        membro.Nome = request.Nome;
+        membro.Apelido = request.Apelido;
+        membro.Telefone = request.Telefone;
+        membro.Email = request.Email;
+        membro.DataIngresso = request.DataIngresso;
+        membro.DataPromocaoMeioEscudo = request.DataPromocaoMeioEscudo;
+        membro.DataPromocaoEscudo = request.DataPromocaoEscudo;
+        membro.DataSaida = request.DataSaida;
+        membro.Status = request.Status;
+        membro.Cargo = request.Cargo;
+        membro.Observacoes = request.Observacoes;
 
         return NoContent();
     }
@@ -115,5 +134,25 @@ public class MembrosController : ControllerBase
         Membros.Remove(membro);
 
         return NoContent();
+    }
+
+    private static MembroResponse MapearParaResponse(Membro membro)
+    {
+        return new MembroResponse
+        {
+            Id = membro.Id,
+            Nome = membro.Nome,
+            Apelido = membro.Apelido,
+            Telefone = membro.Telefone,
+            Email = membro.Email,
+            DataIngresso = membro.DataIngresso,
+            DataPromocaoMeioEscudo = membro.DataPromocaoMeioEscudo,
+            DataPromocaoEscudo = membro.DataPromocaoEscudo,
+            DataSaida = membro.DataSaida,
+            Status = membro.Status,
+            Cargo = membro.Cargo,
+            Observacoes = membro.Observacoes,
+            DataCriacao = membro.DataCriacao
+        };
     }
 }
