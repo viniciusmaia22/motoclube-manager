@@ -142,4 +142,13 @@ textarea {
   .member-info {
     text-align: left;
   }
+ 
+  .feedback-message {
+    margin: 0;
+    color: #6b7280;
+  }
+
+  .error-message {
+    color: #dc2626;
+  }
 }
