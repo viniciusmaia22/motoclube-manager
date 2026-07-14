@@ -14,11 +14,11 @@ public class Membro
 
     public DateTime DataIngresso { get; set; }
 
-    public DateTime DataPromocaoMeioEscudo { get; set; }
+    public DateTime? DataPromocaoMeioEscudo { get; set; }
 
-    public DateTime DataPromocaoEscudo { get; set; }
+    public DateTime? DataPromocaoEscudo { get; set; }
 
-    public DateTime DataSaida { get; set; }
+    public DateTime? DataSaida { get; set; }
 
     public StatusMembro Status { get; set; }
 
