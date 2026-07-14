@@ -67,4 +67,44 @@ public class MembrosController : ControllerBase
 
         return CreatedAtAction(nameof(BuscarPorId), new { id = novoMembro.Id }, novoMembro);
     }
+
+    [HttpPut("{id}")]
+    public IActionResult Atualizar(int id, Membro membroAtualizado)
+    {
+        var membro = Membros.FirstOrDefault(membro => membro.Id == id);
+
+        if (membro is null)
+        {
+            return NotFound();
+        }
+
+        membro.Nome = membroAtualizado.Nome;
+        membro.Apelido = membroAtualizado.Apelido;
+        membro.Telefone = membroAtualizado.Telefone;
+        membro.Email = membroAtualizado.Email;
+        membro.DataIngresso = membroAtualizado.DataIngresso;
+        membro.DataPromocaoMeioEscudo = membroAtualizado.DataPromocaoMeioEscudo;
+        membro.DataPromocaoEscudo = membroAtualizado.DataPromocaoEscudo;
+        membro.DataSaida = membroAtualizado.DataSaida;
+        membro.Status = membroAtualizado.Status;
+        membro.Cargo = membroAtualizado.Cargo;
+        membro.Observacoes = membroAtualizado.Observacoes;
+
+        return NoContent();
+    }
+
+    [HttpDelete("{id}")]
+    public IActionResult Excluir(int id)
+    {
+        var membro = Membros.FirstOrDefault(membro => membro.Id == id);
+
+        if (membro is null)
+        {
+            return NotFound();
+        }
+
+        Membros.Remove(membro);
+
+        return NoContent();
+    }
 }
