@@ -38,9 +38,18 @@ public class MembrosController : ControllerBase
     private static int ProximoId = 3;
 
     [HttpGet]
-    public ActionResult<List<Membro>> Listar()
+    public ActionResult<List<Membro>> Listar([FromQuery] StatusMembro? status)
     {
-        return Ok(Membros);
+        if (status is null)
+        {
+            return Ok(Membros);
+        }
+
+        var membrosFiltrados = Membros
+            .Where(membro => membro.Status == status)
+            .ToList();
+
+        return Ok(membrosFiltrados);
     }
 
     [HttpGet("{id}")]
