@@ -41,3 +41,30 @@ export async function criarMembro(dados: CriarMembroRequest): Promise<Membro> {
 
   return response.json();
 }
+
+export async function atualizarMembro(
+  id: number,
+  dados: CriarMembroRequest
+): Promise<void> {
+  const response = await fetch(`${API_BASE_URL}/membros/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(dados),
+  });
+
+  if (!response.ok) {
+    throw new Error("Erro ao atualizar membro.");
+  }
+}
+
+export async function excluirMembro(id: number): Promise<void> {
+  const response = await fetch(`${API_BASE_URL}/membros/${id}`, {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    throw new Error("Erro ao excluir membro.");
+  }
+}
