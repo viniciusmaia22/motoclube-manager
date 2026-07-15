@@ -1,12 +1,18 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import { criarMembro, listarMembros } from "./services/membrosService";
+import {
+  atualizarMembro,
+  criarMembro,
+  excluirMembro,
+  listarMembros,
+} from "./services/membrosService";
 import type { Membro } from "./types/membro";
 
 function App() {
   const [membros, setMembros] = useState<Membro[]>([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
+  const [membroEditandoId, setMembroEditandoId] = useState<number | null>(null);
 
   const formularioInicial = {
     nome: "",
@@ -57,7 +63,24 @@ function App() {
     );
   }
 
-  async function cadastrarMembro(event: React.FormEvent<HTMLFormElement>) {
+   function iniciarEdicao(membro: Membro) {
+    setMembroEditandoId(membro.id);
+
+    setFormulario({
+      nome: membro.nome,
+      apelido: membro.apelido,
+      telefone: membro.telefone,
+      email: membro.email,
+      dataIngresso: membro.dataIngresso.substring(0, 10),
+      status: obterStatusValor(membro.status),
+      cargo: obterCargoValor(membro.cargo),
+      observacoes: membro.observacoes,
+    });
+
+    setMensagemFormulario("");
+  }
+
+  async function salvarMembro(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     setMensagemFormulario("");
@@ -67,23 +90,99 @@ function App() {
       return;
     }
 
+    const dados = {
+      ...formulario,
+      dataPromocaoMeioEscudo: null,
+      dataPromocaoEscudo: null,
+      dataSaida: null,
+    };
+
     try {
       setSalvando(true);
 
-      const novoMembro = await criarMembro({
-        ...formulario,
-        dataPromocaoMeioEscudo: null,
-        dataPromocaoEscudo: null,
-        dataSaida: null,
-      });
+      if (membroEditandoId !== null) {
+        await atualizarMembro(membroEditandoId, dados);
 
-      setMembros((membrosAtuais) => [...membrosAtuais, novoMembro]);
+        const membrosAtualizados = await listarMembros();
+        setMembros(membrosAtualizados);
+
+        setMensagemFormulario("Membro atualizado com sucesso.");
+      } else {
+        const novoMembro = await criarMembro(dados);
+
+        setMembros((membrosAtuais) => [...membrosAtuais, novoMembro]);
+
+        setMensagemFormulario("Membro cadastrado com sucesso.");
+      }
+
       setFormulario(formularioInicial);
-      setMensagemFormulario("Membro cadastrado com sucesso.");
+      setMembroEditandoId(null);
     } catch {
-      setMensagemFormulario("Não foi possível cadastrar o membro.");
+      setMensagemFormulario("Não foi possível salvar o membro.");
     } finally {
       setSalvando(false);
+    }
+  }
+
+  function cancelarEdicao() {
+    setFormulario(formularioInicial);
+    setMembroEditandoId(null);
+    setMensagemFormulario("");
+  }
+
+  function obterStatusValor(status: string | number): number {
+    if (typeof status === "number") {
+      return status;
+    }
+
+    const statusMap: Record<string, number> = {
+      Ativo: 1,
+      Licenciado: 2,
+      Suspenso: 3,
+      Inativo: 4,
+      Desligado: 5,
+    };
+
+    return statusMap[status] ?? 1;
+  }
+
+  function obterCargoValor(cargo: string | number): number {
+    if (typeof cargo === "number") {
+      return cargo;
+    }
+
+    const cargoMap: Record<string, number> = {
+      Padrao: 1,
+      Secretario: 2,
+      DiretorFinanceiro: 3,
+      DiretorEventos: 4,
+      SgtArmas: 5,
+      VicePresidente: 6,
+      Presidente: 7,
+    };
+
+    return cargoMap[cargo] ?? 1;
+  }
+
+  async function removerMembro(id: number) {
+    const confirmou = window.confirm("Deseja realmente excluir este membro?");
+
+    if (!confirmou) {
+      return;
+    }
+
+    try {
+      await excluirMembro(id);
+
+      setMembros((membrosAtuais) =>
+        membrosAtuais.filter((membro) => membro.id !== id)
+      );
+
+      if (membroEditandoId === id) {
+        cancelarEdicao();
+      }
+    } catch {
+      setErro("Não foi possível excluir o membro.");
     }
   }
 
@@ -102,10 +201,10 @@ function App() {
 
       <section className="card">
         <div className="card-header">
-          <h2>Novo membro</h2>
+          <h2>{membroEditandoId === null ? "Novo membro" : "Editar membro"}</h2>
         </div>
 
-        <form className="member-form" onSubmit={cadastrarMembro}>
+        <form className="member-form" onSubmit={salvarMembro}>
           <div className="form-grid">
             <label>
               Nome
@@ -204,8 +303,14 @@ function App() {
           )}
 
           <button className="primary-button" type="submit" disabled={salvando}>
-            {salvando ? "Salvando..." : "Cadastrar membro"}
+            {salvando ? "Salvando..." : membroEditandoId === null ? "Cadastrar membro" : "Salvar alterações"}
           </button>
+
+          {membroEditandoId !== null && (
+            <button className="secondary-button" type="button" onClick={cancelarEdicao}>
+              Cancelar edição
+            </button>
+          )}
         </form>
       </section>
 
@@ -237,6 +342,24 @@ function App() {
                 <div className="member-info">
                   <span>Status: {membro.status}</span>
                   <span>Cargo: {membro.cargo}</span>
+                </div>
+
+                <div className="member-actions">
+                  <button
+                    className="secondary-button"
+                    type="button"
+                    onClick={() => iniciarEdicao(membro)}
+                  >
+                    Editar
+                  </button>
+
+                  <button
+                    className="danger-button"
+                    type="button"
+                    onClick={() => removerMembro(membro.id)}
+                  >
+                    Excluir
+                  </button>
                 </div>
               </article>
             ))}

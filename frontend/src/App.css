@@ -195,3 +195,45 @@ textarea {
     grid-template-columns: 1fr;
   }
 }
+
+.member-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.secondary-button {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #111827;
+  padding: 10px 14px;
+  cursor: pointer;
+}
+
+.secondary-button:hover {
+  background-color: #f3f4f6;
+}
+
+.danger-button {
+  border: none;
+  border-radius: 8px;
+  background-color: #dc2626;
+  color: #ffffff;
+  padding: 10px 14px;
+  cursor: pointer;
+}
+
+.danger-button:hover {
+  background-color: #b91c1c;
+}
+
+@media (max-width: 640px) {
+  .member-actions {
+    justify-content: stretch;
+  }
+
+  .member-actions button {
+    flex: 1;
+  }
+}
