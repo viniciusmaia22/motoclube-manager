@@ -1,50 +1,36 @@
 # Backlog — Motoclube Manager
 
-## MVP inicial
+## Concluído
 
-### Cadastro de Membros
+- Criar estrutura inicial do projeto
+- Criar backend ASP.NET Core Web API
+- Criar entidade `Membro`
+- Criar endpoints de listagem e cadastro
+- Criar endpoints de edição e exclusão
+- Criar filtro por status no backend
+- Criar DTOs de membros
+- Criar frontend React com TypeScript
+- Criar listagem de membros
+- Integrar frontend com API
+- Criar formulário de cadastro
+- Criar edição e exclusão no frontend
+- Criar filtro por status no frontend
+- Separar componentes React
+- Organizar types, helpers e constantes
 
-- Criar estrutura inicial do projeto.
-- Criar API ASP.NET Core Web API.
-- Criar entidade Membro.
-- Criar listagem de membros.
-- Criar cadastro de membro.
-- Criar edição de membro.
-- Criar exclusão de membro.
-- Criar frontend React com TypeScript.
-- Criar tela de listagem de membros.
-- Criar formulário de cadastro de membro.
-- Integrar frontend com API.
-- Criar filtro por status.
+## Próximos itens
 
-## Próximos módulos
+- Criar arquivos de contexto para IA no VS Code
+- Melhorar validações do backend
+- Melhorar validações do frontend
+- Exibir labels amigáveis para status e cargo
+- Melhorar tratamento de erros
 
-### Promoções
+## Futuro
 
-- Registrar promoção de membro.
-- Consultar histórico de promoções.
-
-### Punições
-
-- Registrar punição.
-- Consultar histórico disciplinar.
-
-### Reuniões
-
-- Criar agenda de reuniões.
-- Controlar status da reunião.
-
-### Atas
-
-- Criar ata vinculada a uma reunião.
-- Registrar decisões e responsáveis.
-
-## Fora do escopo inicial
-
-- Login.
-- Permissões.
-- Banco de dados.
-- Controle financeiro.
-- Upload de documentos.
-- Notificações.
-- Dashboard.
+- Adicionar banco de dados
+- Criar autenticação
+- Criar controle de permissões
+- Criar módulo financeiro
+- Criar módulo de eventos
+- Criar dashboard
