@@ -16,8 +16,12 @@ export type CriarMembroRequest = {
   observacoes: string;
 };
 
-export async function listarMembros(): Promise<Membro[]> {
-  const response = await fetch(`${API_BASE_URL}/membros`);
+export async function listarMembros(status?: string): Promise<Membro[]> {
+  const url = status
+    ? `${API_BASE_URL}/membros?status=${status}`
+    : `${API_BASE_URL}/membros`;
+
+  const response = await fetch(url);
 
   if (!response.ok) {
     throw new Error("Erro ao buscar membros.");

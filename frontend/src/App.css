@@ -237,3 +237,24 @@ textarea {
     flex: 1;
   }
 }
+
+.filter-field {
+  display: grid;
+  gap: 6px;
+  color: #374151;
+  font-weight: bold;
+}
+
+.filter-field select {
+  min-width: 180px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+@media (max-width: 640px) {
+  .filter-field,
+  .filter-field select {
+    width: 100%;
+  }
+}
