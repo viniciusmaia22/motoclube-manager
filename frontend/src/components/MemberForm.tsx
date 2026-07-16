@@ -1,13 +1,9 @@
-type MemberFormData = {
-  nome: string;
-  apelido: string;
-  telefone: string;
-  email: string;
-  dataIngresso: string;
-  status: number;
-  cargo: number;
-  observacoes: string;
-};
+import type { MemberFormData } from "../types/membro";
+
+import {
+  CARGO_FORM_OPTIONS,
+  STATUS_FORM_OPTIONS,
+} from "../constants/memberOptions";
 
 type MemberFormProps = {
   formulario: MemberFormData;
@@ -93,24 +89,22 @@ export function MemberForm({
           <label>
             Status
             <select name="status" value={formulario.status} onChange={onChange}>
-              <option value={1}>Ativo</option>
-              <option value={2}>Licenciado</option>
-              <option value={3}>Suspenso</option>
-              <option value={4}>Inativo</option>
-              <option value={5}>Desligado</option>
+              {STATUS_FORM_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
             </select>
           </label>
 
           <label>
             Cargo
             <select name="cargo" value={formulario.cargo} onChange={onChange}>
-              <option value={1}>Padrão</option>
-              <option value={2}>Secretário</option>
-              <option value={3}>Diretor Financeiro</option>
-              <option value={4}>Diretor de Eventos</option>
-              <option value={5}>Sgt. Armas</option>
-              <option value={6}>Vice-presidente</option>
-              <option value={7}>Presidente</option>
+              {CARGO_FORM_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
             </select>
           </label>
         </div>

@@ -29,3 +29,14 @@ export interface Membro {
   observacoes: string;
   dataCriacao: string;
 }
+
+export type MemberFormData = {
+  nome: string;
+  apelido: string;
+  telefone: string;
+  email: string;
+  dataIngresso: string;
+  status: number;
+  cargo: number;
+  observacoes: string;
+};

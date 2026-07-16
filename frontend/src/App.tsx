@@ -9,11 +9,13 @@ import {
   listarMembros,
 } from "./services/membrosService";
 
-import type { Membro } from "./types/membro";
+import type { MemberFormData, Membro } from "./types/membro";
 
 import { MemberForm } from "./components/MemberForm";
 
 import { MembersList } from "./components/MembersList";
+
+import { obterCargoValor, obterStatusValor } from "./helpers/memberHelpers";
 
 function App() {
   const [membros, setMembros] = useState<Membro[]>([]);
@@ -21,7 +23,7 @@ function App() {
   const [erro, setErro] = useState("");
   const [membroEditandoId, setMembroEditandoId] = useState<number | null>(null);
 
-  const formularioInicial = {
+  const formularioInicial: MemberFormData = {
     nome: "",
     apelido: "",
     telefone: "",
@@ -143,40 +145,6 @@ function App() {
     setFormulario(formularioInicial);
     setMembroEditandoId(null);
     setMensagemFormulario("");
-  }
-
-  function obterStatusValor(status: string | number): number {
-    if (typeof status === "number") {
-      return status;
-    }
-
-    const statusMap: Record<string, number> = {
-      Ativo: 1,
-      Licenciado: 2,
-      Suspenso: 3,
-      Inativo: 4,
-      Desligado: 5,
-    };
-
-    return statusMap[status] ?? 1;
-  }
-
-  function obterCargoValor(cargo: string | number): number {
-    if (typeof cargo === "number") {
-      return cargo;
-    }
-
-    const cargoMap: Record<string, number> = {
-      Padrao: 1,
-      Secretario: 2,
-      DiretorFinanceiro: 3,
-      DiretorEventos: 4,
-      SgtArmas: 5,
-      VicePresidente: 6,
-      Presidente: 7,
-    };
-
-    return cargoMap[cargo] ?? 1;
   }
 
   async function removerMembro(id: number) {

@@ -1,5 +1,6 @@
 import type { Membro } from "../types/membro";
 import { MemberCard } from "./MemberCard";
+import { STATUS_OPTIONS } from "../constants/memberOptions";
 
 type MembersListProps = {
   membros: Membro[];
@@ -34,12 +35,11 @@ export function MembersList({
             value={statusFiltro}
             onChange={(event) => onStatusFilterChange(event.target.value)}
           >
-            <option value="">Todos</option>
-            <option value="Ativo">Ativo</option>
-            <option value="Licenciado">Licenciado</option>
-            <option value="Suspenso">Suspenso</option>
-            <option value="Inativo">Inativo</option>
-            <option value="Desligado">Desligado</option>
+            {STATUS_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
           </select>
         </label>
       </div>
