@@ -2,23 +2,79 @@
 
 ## Visão geral
 
-O Motoclube Manager será uma aplicação web para gerenciamento de um motoclube.
+O projeto `motoclube-manager` é dividido em duas aplicações principais:
 
-A aplicação será dividida em duas partes principais:
+- Backend: ASP.NET Core Web API
+- Frontend: React com TypeScript
 
-- frontend em React com TypeScript;
-- backend em ASP.NET Core Web API com C#.
-
-Na primeira fase, a API usará armazenamento em memória. O banco de dados será adicionado em uma etapa futura.
-
-## Estrutura planejada
+## Estrutura geral
 
 ```text
 motoclube-manager/
 ├── backend/
-│   └── ASP.NET Core Web API
+│   └── MotoclubeManager.Api/
 ├── frontend/
-│   └── React + TypeScript
+│   └── src/
 ├── docs/
-└── README.md
+└── .github/
 ```
+
+### Backend
+
+- O backend expõe uma API REST para gerenciamento de membros.
+
+#### Recursos atuais
+
+```text
+GET /api/membros
+GET /api/membros/{id}
+GET /api/membros?status=Ativo
+POST /api/membros
+PUT /api/membros/{id}
+DELETE /api/membros/{id}
+```
+
+#### Organização principal
+
+```text
+backend/MotoclubeManager.Api/
+├── Controllers/
+├── Dtos/
+├── Models/
+└── Program.cs
+```
+
+### Frontend
+
+- O frontend consome a API do backend e permite gerenciar membros pela interface web.
+
+#### Organização principal
+
+```text
+frontend/src/
+├── components/
+├── constants/
+├── helpers/
+├── services/
+├── types/
+├── App.tsx
+└── App.css
+```
+
+## Fluxo de dados
+
+```text
+Usuário
+↓
+Frontend React
+↓
+membrosService.ts
+↓
+API ASP.NET Core
+↓
+Lista em memória
+```
+
+## Observações
+
+- O projeto ainda não utiliza banco de dados, autenticação ou autorização.

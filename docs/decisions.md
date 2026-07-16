@@ -1,63 +1,65 @@
 # Decisões técnicas
 
-## 1. Começar pelo Cadastro de Membros
+## Backend em memória
 
-### Decisão
+Nesta fase, o backend utiliza armazenamento em memória.
 
-O primeiro módulo do sistema será o Cadastro de Membros.
+Motivo:
 
-### Motivo
+- reduzir complexidade inicial;
+- focar no fluxo completo entre frontend e backend;
+- adiar banco de dados para uma fase posterior.
 
-Membros são a entidade central do sistema. Promoções, punições, reuniões e atas dependem do cadastro de membros.
+## API REST com ASP.NET Core
 
----
+O backend foi criado como Web API em ASP.NET Core.
 
-## 2. Usar API em memória na primeira fase
+Motivo:
 
-### Decisão
+- boa separação entre frontend e backend;
+- facilidade para expor endpoints REST;
+- compatibilidade com Swagger.
 
-A API começará usando dados em memória.
+## Frontend com React e TypeScript
 
-### Motivo
+O frontend utiliza React com TypeScript.
 
-O objetivo inicial é aprender a criar endpoints, integrar frontend e backend e validar o fluxo completo antes de adicionar banco de dados.
+Motivo:
 
-### Consequência
+- componentização;
+- tipagem estática;
+- melhor organização para evolução futura.
 
-Os dados serão perdidos ao reiniciar a API.
+## CSS puro
 
----
+O projeto utiliza CSS puro.
 
-## 3. Usar React com TypeScript
+Motivo:
 
-### Decisão
+- evitar dependência de bibliotecas visuais no início;
+- manter foco em fundamentos de frontend;
+- facilitar aprendizado.
 
-O frontend será desenvolvido com React e TypeScript.
+## Componentes React separados
 
-### Motivo
+O `App.tsx` foi separado em componentes menores:
 
-TypeScript ajuda a criar contratos mais claros entre componentes, telas e respostas da API.
+- `MemberForm`
+- `MembersList`
+- `MemberCard`
 
----
+Motivo:
 
-## 4. Usar CSS puro inicialmente
+- reduzir complexidade do `App.tsx`;
+- melhorar legibilidade;
+- preparar o projeto para manutenção.
 
-### Decisão
+## Constantes e helpers separados
 
-O frontend começará com CSS puro.
+Opções de status, cargo e funções auxiliares foram movidas para arquivos dedicados.
 
-### Motivo
+Motivo:
 
-O foco inicial é aprender estrutura, componentes, integração e fluxo de dados, sem depender de bibliotecas visuais.
-
----
-
-## 5. Não implementar autenticação no início
-
-### Decisão
-
-Login, usuários e permissões ficarão fora do MVP inicial.
-
-### Motivo
-
-Autenticação adicionaria complexidade antes de o fluxo principal estar funcionando.
+- evitar duplicação;
+- facilitar manutenção;
+- preparar o código para uso assistido por IA.
