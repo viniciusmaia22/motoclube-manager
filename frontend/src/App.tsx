@@ -28,19 +28,9 @@ function App() {
   const [formulario, setFormulario] = useState(formularioInicial);
   const [mensagemFormulario, setMensagemFormulario] = useState("");
   const [salvando, setSalvando] = useState(false);
+  const [statusFiltro, setStatusFiltro] = useState("");
 
   useEffect(() => {
-    async function carregarMembros() {
-      try {
-        const dados = await listarMembros();
-        setMembros(dados);
-      } catch {
-        setErro("Não foi possível carregar os membros.");
-      } finally {
-        setCarregando(false);
-      }
-    }
-
     carregarMembros();
   }, []);
 
@@ -80,6 +70,27 @@ function App() {
     setMensagemFormulario("");
   }
 
+  async function carregarMembros(status?: string) {
+    try {
+      setCarregando(true);
+      setErro("");
+
+      const dados = await listarMembros(status);
+      setMembros(dados);
+    } catch {
+      setErro("Não foi possível carregar os membros.");
+    } finally {
+      setCarregando(false);
+    }
+  }
+
+  function alterarFiltroStatus(event: React.ChangeEvent<HTMLSelectElement>) {
+    const novoStatus = event.target.value;
+
+    setStatusFiltro(novoStatus);
+    carregarMembros(novoStatus || undefined);
+  }
+
   async function salvarMembro(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -103,14 +114,13 @@ function App() {
       if (membroEditandoId !== null) {
         await atualizarMembro(membroEditandoId, dados);
 
-        const membrosAtualizados = await listarMembros();
-        setMembros(membrosAtualizados);
+        await carregarMembros(statusFiltro || undefined);
 
         setMensagemFormulario("Membro atualizado com sucesso.");
       } else {
-        const novoMembro = await criarMembro(dados);
+        await criarMembro(dados);
 
-        setMembros((membrosAtuais) => [...membrosAtuais, novoMembro]);
+        await carregarMembros(statusFiltro || undefined);
 
         setMensagemFormulario("Membro cadastrado com sucesso.");
       }
@@ -174,9 +184,7 @@ function App() {
     try {
       await excluirMembro(id);
 
-      setMembros((membrosAtuais) =>
-        membrosAtuais.filter((membro) => membro.id !== id)
-      );
+      await carregarMembros(statusFiltro || undefined);
 
       if (membroEditandoId === id) {
         cancelarEdicao();
@@ -316,8 +324,22 @@ function App() {
 
       <section className="card">
         <div className="card-header">
-          <h2>Membros</h2>
-          <span>{membros.length} cadastrados</span>
+          <div>
+            <h2>Membros</h2>
+            <span>{membros.length} cadastrados</span>
+          </div>
+
+          <label className="filter-field">
+            Status
+            <select value={statusFiltro} onChange={alterarFiltroStatus}>
+              <option value="">Todos</option>
+              <option value="Ativo">Ativo</option>
+              <option value="Licenciado">Licenciado</option>
+              <option value="Suspenso">Suspenso</option>
+              <option value="Inativo">Inativo</option>
+              <option value="Desligado">Desligado</option>
+            </select>
+          </label>
         </div>
 
         {carregando && <p className="feedback-message">Carregando membros...</p>}
