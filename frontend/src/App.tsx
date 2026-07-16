@@ -1,12 +1,19 @@
 import { useEffect, useState } from "react";
+
 import "./App.css";
+
 import {
   atualizarMembro,
   criarMembro,
   excluirMembro,
   listarMembros,
 } from "./services/membrosService";
+
 import type { Membro } from "./types/membro";
+
+import { MemberForm } from "./components/MemberForm";
+
+import { MembersList } from "./components/MembersList";
 
 function App() {
   const [membros, setMembros] = useState<Membro[]>([]);
@@ -84,13 +91,11 @@ function App() {
     }
   }
 
-  function alterarFiltroStatus(event: React.ChangeEvent<HTMLSelectElement>) {
-    const novoStatus = event.target.value;
-
+  function alterarFiltroStatus(novoStatus: string) {
     setStatusFiltro(novoStatus);
     carregarMembros(novoStatus || undefined);
   }
-
+  
   async function salvarMembro(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -207,187 +212,25 @@ function App() {
         </button>
       </section>
 
-      <section className="card">
-        <div className="card-header">
-          <h2>{membroEditandoId === null ? "Novo membro" : "Editar membro"}</h2>
-        </div>
+      <MemberForm
+        formulario={formulario}
+        mensagemFormulario={mensagemFormulario}
+        salvando={salvando}
+        membroEditandoId={membroEditandoId}
+        onChange={atualizarCampo}
+        onSubmit={salvarMembro}
+        onCancelEdit={cancelarEdicao}
+      />
 
-        <form className="member-form" onSubmit={salvarMembro}>
-          <div className="form-grid">
-            <label>
-              Nome
-              <input
-                type="text"
-                name="nome"
-                value={formulario.nome}
-                onChange={atualizarCampo}
-              />
-            </label>
-
-            <label>
-              Apelido
-              <input
-                type="text"
-                name="apelido"
-                value={formulario.apelido}
-                onChange={atualizarCampo}
-              />
-            </label>
-
-            <label>
-              Telefone
-              <input
-                type="text"
-                name="telefone"
-                value={formulario.telefone}
-                onChange={atualizarCampo}
-              />
-            </label>
-
-            <label>
-              Email
-              <input
-                type="email"
-                name="email"
-                value={formulario.email}
-                onChange={atualizarCampo}
-              />
-            </label>
-
-            <label>
-              Data de ingresso
-              <input
-                type="date"
-                name="dataIngresso"
-                value={formulario.dataIngresso}
-                onChange={atualizarCampo}
-              />
-            </label>
-
-            <label>
-              Status
-              <select
-                name="status"
-                value={formulario.status}
-                onChange={atualizarCampo}
-              >
-                <option value={1}>Ativo</option>
-                <option value={2}>Licenciado</option>
-                <option value={3}>Suspenso</option>
-                <option value={4}>Inativo</option>
-                <option value={5}>Desligado</option>
-              </select>
-            </label>
-
-            <label>
-              Cargo
-              <select
-                name="cargo"
-                value={formulario.cargo}
-                onChange={atualizarCampo}
-              >
-                <option value={1}>Padrão</option>
-                <option value={2}>Secretário</option>
-                <option value={3}>Diretor Financeiro</option>
-                <option value={4}>Diretor de Eventos</option>
-                <option value={5}>Sgt. Armas</option>
-                <option value={6}>Vice-presidente</option>
-                <option value={7}>Presidente</option>
-              </select>
-            </label>
-          </div>
-
-          <label>
-            Observações
-            <textarea
-              name="observacoes"
-              value={formulario.observacoes}
-              onChange={atualizarCampo}
-            />
-          </label>
-
-          {mensagemFormulario && (
-            <p className="feedback-message">{mensagemFormulario}</p>
-          )}
-
-          <button className="primary-button" type="submit" disabled={salvando}>
-            {salvando ? "Salvando..." : membroEditandoId === null ? "Cadastrar membro" : "Salvar alterações"}
-          </button>
-
-          {membroEditandoId !== null && (
-            <button className="secondary-button" type="button" onClick={cancelarEdicao}>
-              Cancelar edição
-            </button>
-          )}
-        </form>
-      </section>
-
-      <section className="card">
-        <div className="card-header">
-          <div>
-            <h2>Membros</h2>
-            <span>{membros.length} cadastrados</span>
-          </div>
-
-          <label className="filter-field">
-            Status
-            <select value={statusFiltro} onChange={alterarFiltroStatus}>
-              <option value="">Todos</option>
-              <option value="Ativo">Ativo</option>
-              <option value="Licenciado">Licenciado</option>
-              <option value="Suspenso">Suspenso</option>
-              <option value="Inativo">Inativo</option>
-              <option value="Desligado">Desligado</option>
-            </select>
-          </label>
-        </div>
-
-        {carregando && <p className="feedback-message">Carregando membros...</p>}
-
-        {!carregando && erro && (
-          <p className="feedback-message error-message">{erro}</p>
-        )}
-
-        {!carregando && !erro && membros.length === 0 && (
-          <p className="feedback-message">Nenhum membro cadastrado.</p>
-        )}
-
-        {!carregando && !erro && membros.length > 0 && (
-          <div className="members-list">
-            {membros.map((membro) => (
-              <article className="member-card" key={membro.id}>
-                <div>
-                  <h3>{membro.nome}</h3>
-                  <p>{membro.apelido}</p>
-                </div>
-
-                <div className="member-info">
-                  <span>Status: {membro.status}</span>
-                  <span>Cargo: {membro.cargo}</span>
-                </div>
-
-                <div className="member-actions">
-                  <button
-                    className="secondary-button"
-                    type="button"
-                    onClick={() => iniciarEdicao(membro)}
-                  >
-                    Editar
-                  </button>
-
-                  <button
-                    className="danger-button"
-                    type="button"
-                    onClick={() => removerMembro(membro.id)}
-                  >
-                    Excluir
-                  </button>
-                </div>
-              </article>
-            ))}
-          </div>
-        )}
-      </section>
+      <MembersList
+        membros={membros}
+        carregando={carregando}
+        erro={erro}
+        statusFiltro={statusFiltro}
+        onStatusFilterChange={alterarFiltroStatus}
+        onEdit={iniciarEdicao}
+        onDelete={removerMembro}
+      />
     </main>
   );
 }
