@@ -111,6 +111,15 @@ textarea {
   font-size: 14px;
   text-align: right;
 }
+ 
+.feedback-message {
+  margin: 0;
+  color: #6b7280;
+}
+
+.error-message {
+  color: #dc2626;
+}
 
 @media (max-width: 640px) {
   .app {
@@ -134,7 +143,10 @@ textarea {
     align-items: flex-start;
     flex-direction: column;
   }
-
+  
+  .card + .card {
+    margin-top: 24px;
+  }
   .member-card {
     flex-direction: column;
   }
@@ -142,15 +154,7 @@ textarea {
   .member-info {
     text-align: left;
   }
- 
-  .feedback-message {
-    margin: 0;
-    color: #6b7280;
-  }
 
-  .error-message {
-    color: #dc2626;
-  }
 }
 
 .member-form {

@@ -53,7 +53,7 @@ function App() {
     );
   }
 
-   function iniciarEdicao(membro: Membro) {
+  function iniciarEdicao(membro: Membro) {
     setMembroEditandoId(membro.id);
 
     setFormulario({
