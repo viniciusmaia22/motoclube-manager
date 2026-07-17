@@ -8,6 +8,7 @@ import {
 type MemberFormProps = {
   formulario: MemberFormData;
   mensagemFormulario: string;
+  errosFormulario: Record<string, string>;
   salvando: boolean;
   membroEditandoId: number | null;
   onChange: (
@@ -22,6 +23,7 @@ type MemberFormProps = {
 export function MemberForm({
   formulario,
   mensagemFormulario,
+  errosFormulario,
   salvando,
   membroEditandoId,
   onChange,
@@ -44,6 +46,9 @@ export function MemberForm({
               value={formulario.nome}
               onChange={onChange}
             />
+            {errosFormulario.nome && (
+              <p className="field-error">{errosFormulario.nome}</p>
+            )}
           </label>
 
           <label>
@@ -54,16 +59,23 @@ export function MemberForm({
               value={formulario.apelido}
               onChange={onChange}
             />
+            {errosFormulario.apelido && (
+              <p className="field-error">{errosFormulario.apelido}</p>
+            )}
           </label>
 
           <label>
             Telefone
             <input
-              type="text"
+              type="tel"
+              inputMode="numeric"
               name="telefone"
               value={formulario.telefone}
               onChange={onChange}
             />
+            {errosFormulario.telefone && (
+              <p className="field-error">{errosFormulario.telefone}</p>
+            )}
           </label>
 
           <label>
@@ -74,6 +86,9 @@ export function MemberForm({
               value={formulario.email}
               onChange={onChange}
             />
+            {errosFormulario.email && (
+              <p className="field-error">{errosFormulario.email}</p>
+            )}
           </label>
 
           <label>
@@ -84,6 +99,9 @@ export function MemberForm({
               value={formulario.dataIngresso}
               onChange={onChange}
             />
+            {errosFormulario.dataIngresso && (
+              <p className="field-error">{errosFormulario.dataIngresso}</p>
+            )}
           </label>
 
           <label>

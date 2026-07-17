@@ -15,7 +15,12 @@ import { MemberForm } from "./components/MemberForm";
 
 import { MembersList } from "./components/MembersList";
 
-import { obterCargoValor, obterStatusValor } from "./helpers/memberHelpers";
+import {
+  formatarTelefone,
+  obterCargoValor,
+  obterStatusValor,
+  validarFormularioMembro,
+} from "./helpers/memberHelpers";
 
 function App() {
   const [membros, setMembros] = useState<Membro[]>([]);
@@ -36,6 +41,7 @@ function App() {
 
   const [formulario, setFormulario] = useState(formularioInicial);
   const [mensagemFormulario, setMensagemFormulario] = useState("");
+  const [errosFormulario, setErrosFormulario] = useState<Record<string, string>>({});
   const [salvando, setSalvando] = useState(false);
   const [statusFiltro, setStatusFiltro] = useState("");
 
@@ -48,18 +54,30 @@ function App() {
   ) {
     const { name, value } = event.target;
 
+    const valorTratado =
+      name === "telefone"
+        ? formatarTelefone(value)
+        : name === "status" || name === "cargo"
+          ? Number(value)
+          : value;
+
     setFormulario((formularioAtual) => ({
       ...formularioAtual,
-      [name]: name === "status" || name === "cargo" ? Number(value) : value,
+      [name]: valorTratado,
     }));
+
+    setErrosFormulario((errosAtuais) => {
+      const errosAtualizados = { ...errosAtuais };
+      delete errosAtualizados[name];
+      return errosAtualizados;
+    });
   }
 
-  function formularioValido() {
-    return (
-      formulario.nome.trim() !== "" &&
-      formulario.apelido.trim() !== "" &&
-      formulario.dataIngresso.trim() !== ""
-    );
+  function validarFormulario() {
+    const errosEncontrados = validarFormularioMembro(formulario);
+    setErrosFormulario(errosEncontrados);
+
+    return Object.keys(errosEncontrados).length === 0;
   }
 
   function iniciarEdicao(membro: Membro) {
@@ -68,7 +86,7 @@ function App() {
     setFormulario({
       nome: membro.nome,
       apelido: membro.apelido,
-      telefone: membro.telefone,
+      telefone: formatarTelefone(membro.telefone),
       email: membro.email,
       dataIngresso: membro.dataIngresso.substring(0, 10),
       status: obterStatusValor(membro.status),
@@ -103,8 +121,8 @@ function App() {
 
     setMensagemFormulario("");
 
-    if (!formularioValido()) {
-      setMensagemFormulario("Preencha nome, apelido e data de ingresso.");
+    if (!validarFormulario()) {
+      setMensagemFormulario("Revise os campos destacados antes de salvar.");
       return;
     }
 
@@ -134,6 +152,7 @@ function App() {
 
       setFormulario(formularioInicial);
       setMembroEditandoId(null);
+      setErrosFormulario({});
     } catch {
       setMensagemFormulario("Não foi possível salvar o membro.");
     } finally {
@@ -145,6 +164,7 @@ function App() {
     setFormulario(formularioInicial);
     setMembroEditandoId(null);
     setMensagemFormulario("");
+    setErrosFormulario({});
   }
 
   async function removerMembro(id: number) {
@@ -183,6 +203,7 @@ function App() {
       <MemberForm
         formulario={formulario}
         mensagemFormulario={mensagemFormulario}
+        errosFormulario={errosFormulario}
         salvando={salvando}
         membroEditandoId={membroEditandoId}
         onChange={atualizarCampo}
