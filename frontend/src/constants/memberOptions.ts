@@ -15,6 +15,19 @@ export const STATUS_FORM_OPTIONS = [
   { value: 5, label: "Desligado" },
 ];
 
+export const STATUS_LABELS: Record<string | number, string> = {
+  1: "Ativo",
+  2: "Licenciado",
+  3: "Suspenso",
+  4: "Inativo",
+  5: "Desligado",
+  Ativo: "Ativo",
+  Licenciado: "Licenciado",
+  Suspenso: "Suspenso",
+  Inativo: "Inativo",
+  Desligado: "Desligado",
+};
+
 export const CARGO_FORM_OPTIONS = [
   { value: 1, label: "Padrão" },
   { value: 2, label: "Secretário" },
@@ -24,3 +37,20 @@ export const CARGO_FORM_OPTIONS = [
   { value: 6, label: "Vice-presidente" },
   { value: 7, label: "Presidente" },
 ];
+
+export const CARGO_LABELS: Record<string | number, string> = {
+  1: "Padrão",
+  2: "Secretário",
+  3: "Diretor Financeiro",
+  4: "Diretor de Eventos",
+  5: "Sgt. Armas",
+  6: "Vice-presidente",
+  7: "Presidente",
+  Padrao: "Padrão",
+  Secretario: "Secretário",
+  DiretorFinanceiro: "Diretor Financeiro",
+  DiretorEventos: "Diretor de Eventos",
+  SgtArmas: "Sgt. Armas",
+  VicePresidente: "Vice-presidente",
+  Presidente: "Presidente",
+};
