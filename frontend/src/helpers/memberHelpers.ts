@@ -1,3 +1,5 @@
+import { CARGO_LABELS, STATUS_LABELS } from "../constants/memberOptions";
+
 export function obterStatusValor(status: string | number): number {
   if (typeof status === "number") {
     return status;
@@ -30,4 +32,12 @@ export function obterCargoValor(cargo: string | number): number {
   };
 
   return cargoMap[cargo] ?? 1;
+}
+
+export function obterStatusLabel(status: string | number): string {
+  return STATUS_LABELS[status] ?? String(status);
+}
+
+export function obterCargoLabel(cargo: string | number): string {
+  return CARGO_LABELS[cargo] ?? String(cargo);
 }

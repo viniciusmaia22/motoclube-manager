@@ -1,3 +1,4 @@
+import { obterCargoLabel, obterStatusLabel } from "../helpers/memberHelpers";
 import type { Membro } from "../types/membro";
 
 type MemberCardProps = {
@@ -15,8 +16,8 @@ export function MemberCard({ membro, onEdit, onDelete }: MemberCardProps) {
       </div>
 
       <div className="member-info">
-        <span>Status: {membro.status}</span>
-        <span>Cargo: {membro.cargo}</span>
+        <span>Status: {obterStatusLabel(membro.status)}</span>
+        <span>Cargo: {obterCargoLabel(membro.cargo)}</span>
       </div>
 
       <div className="member-actions">
