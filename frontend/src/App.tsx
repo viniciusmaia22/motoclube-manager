@@ -105,7 +105,7 @@ function App() {
       const dados = await listarMembros(status);
       setMembros(dados);
     } catch {
-      setErro("Não foi possível carregar os membros.");
+      setErro("Não foi possível carregar os membros. Tente novamente em instantes.");
     } finally {
       setCarregando(false);
     }
@@ -154,7 +154,7 @@ function App() {
       setMembroEditandoId(null);
       setErrosFormulario({});
     } catch {
-      setMensagemFormulario("Não foi possível salvar o membro.");
+      setMensagemFormulario("Não foi possível salvar o membro. Verifique se a API está disponível.");
     } finally {
       setSalvando(false);
     }
@@ -183,7 +183,7 @@ function App() {
         cancelarEdicao();
       }
     } catch {
-      setErro("Não foi possível excluir o membro.");
+      setErro("Não foi possível excluir o membro. Verifique se a API está disponível.");
     }
   }
 
