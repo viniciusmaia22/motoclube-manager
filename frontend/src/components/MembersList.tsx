@@ -7,7 +7,9 @@ type MembersListProps = {
   carregando: boolean;
   erro: string;
   statusFiltro: string;
+  termoBusca: string;
   onStatusFilterChange: (status: string) => void;
+  onSearchChange: (termo: string) => void;
   onEdit: (membro: Membro) => void;
   onDelete: (id: number) => void;
 };
@@ -17,7 +19,9 @@ export function MembersList({
   carregando,
   erro,
   statusFiltro,
+  termoBusca,
   onStatusFilterChange,
+  onSearchChange,
   onEdit,
   onDelete,
 }: MembersListProps) {
@@ -29,19 +33,31 @@ export function MembersList({
           <span>{membros.length} cadastrados</span>
         </div>
 
-        <label className="filter-field">
-          Status
-          <select
-            value={statusFiltro}
-            onChange={(event) => onStatusFilterChange(event.target.value)}
-          >
-            {STATUS_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </label>
+        <div className="filters-row">
+          <label className="filter-field">
+            Buscar
+            <input
+              type="text"
+              value={termoBusca}
+              placeholder="Nome ou apelido"
+              onChange={(event) => onSearchChange(event.target.value)}
+            />
+          </label>
+
+          <label className="filter-field">
+            Status
+            <select
+              value={statusFiltro}
+              onChange={(event) => onStatusFilterChange(event.target.value)}
+            >
+              {STATUS_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
       </div>
 
       {carregando && <p className="feedback-message">Carregando membros...</p>}
