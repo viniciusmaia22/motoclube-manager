@@ -44,6 +44,7 @@ function App() {
   const [errosFormulario, setErrosFormulario] = useState<Record<string, string>>({});
   const [salvando, setSalvando] = useState(false);
   const [statusFiltro, setStatusFiltro] = useState("");
+  const [termoBusca, setTermoBusca] = useState("");
 
   useEffect(() => {
     carregarMembros();
@@ -114,6 +115,29 @@ function App() {
   function alterarFiltroStatus(novoStatus: string) {
     setStatusFiltro(novoStatus);
     carregarMembros(novoStatus || undefined);
+  }
+
+  function filtrarMembrosPorBusca(lista: Membro[]) {
+    const termoNormalizado = termoBusca.trim().toLowerCase();
+
+    if (termoNormalizado === "") {
+      return lista;
+    }
+
+    return lista.filter((membro) => {
+      const nome = membro.nome.toLowerCase();
+      const apelido = membro.apelido.toLowerCase();
+
+      return nome.includes(termoNormalizado) || apelido.includes(termoNormalizado);
+    });
+  }
+
+  function obterMembrosVisiveis() {
+    const membrosFiltradosPorStatus = statusFiltro
+      ? membros.filter((membro) => membro.status === statusFiltro)
+      : membros;
+
+    return filtrarMembrosPorBusca(membrosFiltradosPorStatus);
   }
   
   async function salvarMembro(event: React.FormEvent<HTMLFormElement>) {
@@ -212,11 +236,13 @@ function App() {
       />
 
       <MembersList
-        membros={membros}
+        membros={obterMembrosVisiveis()}
         carregando={carregando}
         erro={erro}
         statusFiltro={statusFiltro}
+        termoBusca={termoBusca}
         onStatusFilterChange={alterarFiltroStatus}
+        onSearchChange={setTermoBusca}
         onEdit={iniciarEdicao}
         onDelete={removerMembro}
       />
